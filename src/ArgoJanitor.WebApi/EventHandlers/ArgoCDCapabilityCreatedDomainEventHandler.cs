@@ -25,7 +25,13 @@ namespace ArgoJanitor.WebApi.EventHandlers
 
         public async Task HandleAsync(CapabilityCreatedDomainEvent domainEvent)
         {
-            _logger.LogInformation($"This is basically where we will save the domainEvent to DB and let a scheduled task take care of the rest.");
+            _logger.LogInformation($"Creating capability with name: {domainEvent.Data.CapabilityName}");
+
+            var capability = Capability.Create(
+                id: domainEvent.Data.CapabilityId,
+                name: domainEvent.Data.CapabilityName);
+            await _capabilityRepository.Add(capability);
+
         }
     }
 }

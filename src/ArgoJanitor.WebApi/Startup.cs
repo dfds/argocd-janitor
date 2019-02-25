@@ -45,6 +45,7 @@ namespace ArgoJanitor.WebApi
                 .AddDbContext<ArgoJanitorDbContext>((serviceProvider, options) => { options.UseNpgsql(connectionString); });
 
             services.AddTransient<ICapabilityRepository, CapabilityRepository>();
+            services.AddTransient<IArgoCDFacade, ArgoCDFacade>();
            
             services.AddTransient<JsonSerializer>();
 

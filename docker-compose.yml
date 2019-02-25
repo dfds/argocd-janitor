@@ -34,3 +34,10 @@ services:
       - "ADVERTISED_HOST=localhost"
       - "ADVERTISED_PORT=9092"
       - "AUTO_CREATE_TOPICS=true"
+
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    ports:
+    - "9090:9000"
+    environment:
+    - "ZK_HOSTS=kafka:2181"

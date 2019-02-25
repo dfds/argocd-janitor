@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ArgoJanitor.WebApi.Domain
@@ -7,5 +8,6 @@ namespace ArgoJanitor.WebApi.Domain
     {
         Task<Capability> Get(Guid id);
         Task Add(Capability capability);
+        Task<List<Capability>> GetCapabilitiesWithoutAzureAdObjectId();
     }
 }

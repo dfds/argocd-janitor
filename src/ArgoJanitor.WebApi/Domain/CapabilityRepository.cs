@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ArgoJanitor.WebApi.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,16 @@ namespace ArgoJanitor.WebApi.Domain
         {
             await _dbContext.Capabilities.AddAsync(capability);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Capability>> GetCapabilitiesWithoutAzureAdObjectId()
+        {
+            var capabilities = await _dbContext
+                .Capabilities
+                .Where(c => string.IsNullOrEmpty(c.AzureADObjectId))
+                .ToListAsync();
+            
+            return capabilities;
         }
     }
 }

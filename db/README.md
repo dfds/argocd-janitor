@@ -9,14 +9,9 @@ When building the docker image `update-ca-certificates` may cause warnings, it s
 ```bash
 /db
 ┣ migrations/
-┃ ┣ 20181017194326_create_team_table.sql
-┃ ┣ 20181017194336_create_user_table.sql
-┃ ┗ 20181017194344_create_membership_table.sql
+┃ ┣ 20190224220857_create_capability_table.sql
 ┗ seed/
   ┣ _order
-  ┣ Membership.csv
-  ┣ Team.csv
-  ┗ User.csv
 ```
 
 Using:

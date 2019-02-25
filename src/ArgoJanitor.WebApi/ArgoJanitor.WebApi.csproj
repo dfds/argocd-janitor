@@ -24,5 +24,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Infrastructure\Facades\" />
     <Folder Include="Infrastructure\Facades\ArgoCD\" />
+    <Folder Include="Infrastructure\Facades\AzureAD\" />
   </ItemGroup>
 </Project>
