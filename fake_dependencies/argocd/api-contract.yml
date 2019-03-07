@@ -1,0 +1,2377 @@
+consumes:
+- application/json
+produces:
+- application/json
+schemes:
+- http
+- https
+swagger: '2.0'
+info:
+  description: Description of all APIs
+  title: Consolidate Services
+  version: version not set
+paths:
+  "/api/v1/account/password":
+    put:
+      tags:
+      - AccountService
+      summary: UpdatePassword updates an account's password to a new value
+      operationId: UpdatePassword
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/accountUpdatePasswordRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/accountUpdatePasswordResponse"
+  "/api/v1/applications":
+    get:
+      tags:
+      - ApplicationService
+      summary: List returns list of applications
+      operationId: ListMixin5
+      parameters:
+      - type: string
+        name: name
+        in: query
+      - type: string
+        name: refresh
+        in: query
+      - type: array
+        items:
+          type: string
+        name: project
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1ApplicationList"
+    post:
+      tags:
+      - ApplicationService
+      summary: Create creates an application
+      operationId: CreateMixin5
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1Application"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Application"
+  "/api/v1/applications/{application.metadata.name}":
+    put:
+      tags:
+      - ApplicationService
+      summary: Update updates an application
+      operationId: UpdateMixin5
+      parameters:
+      - type: string
+        name: application.metadata.name
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1Application"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Application"
+  "/api/v1/applications/{applicationName}/managed-resources":
+    get:
+      tags:
+      - ApplicationService
+      operationId: ManagedResources
+      parameters:
+      - type: string
+        name: applicationName
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/servicesManagedResourcesResponse"
+  "/api/v1/applications/{applicationName}/resource-tree":
+    get:
+      tags:
+      - ApplicationService
+      operationId: ResourceTree
+      parameters:
+      - type: string
+        name: applicationName
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/servicesResourceTreeResponse"
+  "/api/v1/applications/{name}":
+    get:
+      tags:
+      - ApplicationService
+      summary: Get returns an application by name
+      operationId: GetMixin5
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - type: string
+        name: refresh
+        in: query
+      - type: array
+        items:
+          type: string
+        name: project
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Application"
+    delete:
+      tags:
+      - ApplicationService
+      summary: Delete deletes an application
+      operationId: DeleteMixin5
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/applicationApplicationResponse"
+  "/api/v1/applications/{name}/events":
+    get:
+      tags:
+      - ApplicationService
+      summary: ListResourceEvents returns a list of event resources
+      operationId: ListResourceEvents
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - type: string
+        name: resourceNamespace
+        in: query
+      - type: string
+        name: resourceName
+        in: query
+      - type: string
+        name: resourceUID
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1EventList"
+  "/api/v1/applications/{name}/manifests":
+    get:
+      tags:
+      - ApplicationService
+      summary: GetManifests returns application manifests
+      operationId: GetManifests
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - type: string
+        name: revision
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/repositoryManifestResponse"
+  "/api/v1/applications/{name}/operation":
+    delete:
+      tags:
+      - ApplicationService
+      summary: TerminateOperation terminates the currently running operation
+      operationId: TerminateOperation
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/applicationOperationTerminateResponse"
+  "/api/v1/applications/{name}/pods/{podName}/logs":
+    get:
+      tags:
+      - ApplicationService
+      summary: PodLogs returns stream of log entries for the specified pod. Pod
+      operationId: PodLogs
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - type: string
+        name: podName
+        in: path
+        required: true
+      - type: string
+        name: namespace
+        in: query
+      - type: string
+        name: container
+        in: query
+      - type: string
+        format: int64
+        name: sinceSeconds
+        in: query
+      - type: string
+        format: int64
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        name: sinceTime.seconds
+        in: query
+      - type: integer
+        format: int32
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive. This field may be limited in precision depending on context.
+        name: sinceTime.nanos
+        in: query
+      - type: string
+        format: int64
+        name: tailLines
+        in: query
+      - type: boolean
+        format: boolean
+        name: follow
+        in: query
+      responses:
+        '200':
+          description: "(streaming responses)"
+          schema:
+            "$ref": "#/definitions/applicationLogEntry"
+  "/api/v1/applications/{name}/resource":
+    get:
+      tags:
+      - ApplicationService
+      summary: GetResource returns single application resource
+      operationId: GetResource
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - type: string
+        name: namespace
+        in: query
+      - type: string
+        name: resourceName
+        in: query
+      - type: string
+        name: version
+        in: query
+      - type: string
+        name: group
+        in: query
+      - type: string
+        name: kind
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/applicationApplicationResourceResponse"
+    delete:
+      tags:
+      - ApplicationService
+      summary: DeleteResource deletes a single application resource
+      operationId: DeleteResource
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/applicationApplicationResponse"
+  "/api/v1/applications/{name}/rollback":
+    post:
+      tags:
+      - ApplicationService
+      summary: Rollback syncs an application to its target state
+      operationId: Rollback
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/applicationApplicationRollbackRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Application"
+  "/api/v1/applications/{name}/spec":
+    put:
+      tags:
+      - ApplicationService
+      summary: UpdateSpec updates an application spec
+      operationId: UpdateSpec
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1ApplicationSpec"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1ApplicationSpec"
+  "/api/v1/applications/{name}/sync":
+    post:
+      tags:
+      - ApplicationService
+      summary: Sync syncs an application to its target state
+      operationId: Sync
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/applicationApplicationSyncRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Application"
+  "/api/v1/clusters":
+    get:
+      tags:
+      - ClusterService
+      summary: List returns list of clusters
+      operationId: List
+      parameters:
+      - type: string
+        name: server
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1ClusterList"
+    post:
+      tags:
+      - ClusterService
+      summary: Create creates a cluster
+      operationId: Create
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1Cluster"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Cluster"
+  "/api/v1/clusters-kubeconfig":
+    post:
+      tags:
+      - ClusterService
+      summary: CreateFromKubeConfig installs the argocd-manager service account into
+        the cluster specified in the given kubeconfig and context
+      operationId: CreateFromKubeConfig
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/clusterClusterCreateFromKubeConfigRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Cluster"
+  "/api/v1/clusters/{cluster.server}":
+    put:
+      tags:
+      - ClusterService
+      summary: Update updates a cluster
+      operationId: Update
+      parameters:
+      - type: string
+        name: cluster.server
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1Cluster"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Cluster"
+  "/api/v1/clusters/{server}":
+    get:
+      tags:
+      - ClusterService
+      summary: Get returns a cluster by server address
+      operationId: GetMixin1
+      parameters:
+      - type: string
+        name: server
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Cluster"
+    delete:
+      tags:
+      - ClusterService
+      summary: Delete deletes a cluster
+      operationId: Delete
+      parameters:
+      - type: string
+        name: server
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/clusterClusterResponse"
+  "/api/v1/projects":
+    get:
+      tags:
+      - ProjectService
+      summary: List returns list of projects
+      operationId: ListMixin3
+      parameters:
+      - type: string
+        name: name
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1AppProjectList"
+    post:
+      tags:
+      - ProjectService
+      summary: Create a new project.
+      operationId: CreateMixin3
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/projectProjectCreateRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1AppProject"
+  "/api/v1/projects/{name}":
+    get:
+      tags:
+      - ProjectService
+      summary: Get returns a project by name
+      operationId: GetMixin3
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1AppProject"
+    delete:
+      tags:
+      - ProjectService
+      summary: Delete deletes a project
+      operationId: DeleteMixin3
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/projectEmptyResponse"
+  "/api/v1/projects/{name}/events":
+    get:
+      tags:
+      - ProjectService
+      summary: ListEvents returns a list of project events
+      operationId: ListEvents
+      parameters:
+      - type: string
+        name: name
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1EventList"
+  "/api/v1/projects/{project.metadata.name}":
+    put:
+      tags:
+      - ProjectService
+      summary: Update updates a project
+      operationId: UpdateMixin3
+      parameters:
+      - type: string
+        name: project.metadata.name
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/projectProjectUpdateRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1AppProject"
+  "/api/v1/projects/{project}/roles/{role}/token":
+    post:
+      tags:
+      - ProjectService
+      summary: Create a new project token.
+      operationId: CreateToken
+      parameters:
+      - type: string
+        name: project
+        in: path
+        required: true
+      - type: string
+        name: role
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/projectProjectTokenCreateRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/projectProjectTokenResponse"
+  "/api/v1/projects/{project}/roles/{role}/token/{iat}":
+    delete:
+      tags:
+      - ProjectService
+      summary: Delete a new project token.
+      operationId: DeleteToken
+      parameters:
+      - type: string
+        name: project
+        in: path
+        required: true
+      - type: string
+        name: role
+        in: path
+        required: true
+      - type: string
+        format: int64
+        name: iat
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/projectEmptyResponse"
+  "/api/v1/repositories":
+    get:
+      tags:
+      - RepositoryService
+      summary: List returns list of repos
+      operationId: ListMixin2
+      parameters:
+      - type: string
+        name: repo
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1RepositoryList"
+    post:
+      tags:
+      - RepositoryService
+      summary: Create creates a repo
+      operationId: CreateMixin2
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1Repository"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Repository"
+  "/api/v1/repositories/{repo.repo}":
+    put:
+      tags:
+      - RepositoryService
+      summary: Update updates a repo
+      operationId: UpdateMixin2
+      parameters:
+      - type: string
+        name: repo.repo
+        in: path
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/v1alpha1Repository"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/v1alpha1Repository"
+  "/api/v1/repositories/{repo}":
+    delete:
+      tags:
+      - RepositoryService
+      summary: Delete deletes a repo
+      operationId: DeleteMixin2
+      parameters:
+      - type: string
+        name: repo
+        in: path
+        required: true
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/repositoryRepoResponse"
+  "/api/v1/repositories/{repo}/apps":
+    get:
+      tags:
+      - RepositoryService
+      summary: ListApps returns list of apps in the repo
+      operationId: ListApps
+      parameters:
+      - type: string
+        name: repo
+        in: path
+        required: true
+      - type: string
+        name: revision
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/repositoryRepoAppsResponse"
+  "/api/v1/repositories/{repo}/apps/{path}":
+    get:
+      tags:
+      - RepositoryService
+      summary: GetAppDetails returns application details by given path
+      operationId: GetAppDetails
+      parameters:
+      - type: string
+        name: repo
+        in: path
+        required: true
+      - type: string
+        name: path
+        in: path
+        required: true
+      - type: string
+        name: revision
+        in: query
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/repositoryRepoAppDetailsResponse"
+  "/api/v1/session":
+    post:
+      tags:
+      - SessionService
+      summary: Create a new JWT for authentication and set a cookie if using HTTP.
+      operationId: CreateMixin7
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          "$ref": "#/definitions/sessionSessionCreateRequest"
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/sessionSessionResponse"
+    delete:
+      tags:
+      - SessionService
+      summary: Delete an existing JWT cookie if using HTTP.
+      operationId: DeleteMixin7
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/sessionSessionResponse"
+  "/api/v1/settings":
+    get:
+      tags:
+      - SettingsService
+      summary: Get returns Argo CD settings
+      operationId: Get
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/clusterSettings"
+  "/api/v1/stream/applications":
+    get:
+      tags:
+      - ApplicationService
+      summary: Watch returns stream of application change events.
+      operationId: Watch
+      parameters:
+      - type: string
+        name: name
+        in: query
+      - type: string
+        name: refresh
+        in: query
+      - type: array
+        items:
+          type: string
+        name: project
+        in: query
+      responses:
+        '200':
+          description: "(streaming responses)"
+          schema:
+            "$ref": "#/definitions/v1alpha1ApplicationWatchEvent"
+  "/api/version":
+    get:
+      tags:
+      - VersionService
+      summary: Version returns version information of the API server
+      operationId: Version
+      responses:
+        '200':
+          description: "(empty)"
+          schema:
+            "$ref": "#/definitions/versionVersionMessage"
+definitions:
+  accountUpdatePasswordRequest:
+    type: object
+    properties:
+      currentPassword:
+        type: string
+      newPassword:
+        type: string
+  accountUpdatePasswordResponse:
+    type: object
+  applicationApplicationResourceResponse:
+    type: object
+    properties:
+      manifest:
+        type: string
+  applicationApplicationResponse:
+    type: object
+  applicationApplicationRollbackRequest:
+    type: object
+    properties:
+      dryRun:
+        type: boolean
+        format: boolean
+      id:
+        type: string
+        format: int64
+      name:
+        type: string
+      prune:
+        type: boolean
+        format: boolean
+  applicationApplicationSyncRequest:
+    type: object
+    title: ApplicationSyncRequest is a request to apply the config state to live state
+    properties:
+      dryRun:
+        type: boolean
+        format: boolean
+      name:
+        type: string
+      parameter:
+        "$ref": "#/definitions/applicationParameterOverrides"
+      prune:
+        type: boolean
+        format: boolean
+      resources:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1SyncOperationResource"
+      revision:
+        type: string
+      strategy:
+        "$ref": "#/definitions/v1alpha1SyncStrategy"
+  applicationLogEntry:
+    type: object
+    properties:
+      content:
+        type: string
+      timeStamp:
+        "$ref": "#/definitions/v1Time"
+  applicationOperationTerminateResponse:
+    type: object
+  applicationParameter:
+    type: object
+    properties:
+      component:
+        type: string
+      name:
+        type: string
+      value:
+        type: string
+  applicationParameterOverrides:
+    type: object
+    title: |-
+      ParameterOverrides is a wrapper on a list of parameters. If omitted, the application's overrides
+      in the spec will be used. If set, will use the supplied list of overrides
+    properties:
+      overrides:
+        type: array
+        items:
+          "$ref": "#/definitions/applicationParameter"
+  applicationv1alpha1ParameterOverrides:
+    type: object
+    title: |-
+      ParameterOverrides masks the value so protobuf can generate
+      +protobuf.nullable=true
+      +protobuf.options.(gogoproto.goproto_stringer)=false
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ComponentParameter"
+  clusterClusterCreateFromKubeConfigRequest:
+    type: object
+    properties:
+      context:
+        type: string
+      inCluster:
+        type: boolean
+        format: boolean
+      kubeconfig:
+        type: string
+      upsert:
+        type: boolean
+        format: boolean
+  clusterClusterResponse:
+    type: object
+  clusterConnector:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+  clusterDexConfig:
+    type: object
+    properties:
+      connectors:
+        type: array
+        items:
+          "$ref": "#/definitions/clusterConnector"
+  clusterOIDCConfig:
+    type: object
+    properties:
+      clientID:
+        type: string
+      issuer:
+        type: string
+      name:
+        type: string
+  clusterSettings:
+    type: object
+    properties:
+      dexConfig:
+        "$ref": "#/definitions/clusterDexConfig"
+      oidcConfig:
+        "$ref": "#/definitions/clusterOIDCConfig"
+      url:
+        type: string
+  projectEmptyResponse:
+    type: object
+  projectProjectCreateRequest:
+    description: ProjectCreateRequest defines project creation parameters.
+    type: object
+    properties:
+      project:
+        "$ref": "#/definitions/v1alpha1AppProject"
+  projectProjectTokenCreateRequest:
+    description: ProjectTokenCreateRequest defines project token creation parameters.
+    type: object
+    properties:
+      description:
+        type: string
+      expiresIn:
+        type: string
+        format: int64
+        title: expiresIn represents a duration in seconds
+      project:
+        type: string
+      role:
+        type: string
+  projectProjectTokenResponse:
+    description: ProjectTokenResponse wraps the created token or returns an empty
+      string if deleted.
+    type: object
+    properties:
+      token:
+        type: string
+  projectProjectUpdateRequest:
+    type: object
+    properties:
+      project:
+        "$ref": "#/definitions/v1alpha1AppProject"
+  repositoryAppInfo:
+    type: object
+    title: AppInfo contains application type and app file path
+    properties:
+      path:
+        type: string
+      type:
+        type: string
+  repositoryHelmAppSpec:
+    type: object
+    title: HelmAppSpec contains helm app name and path in source repo
+    properties:
+      name:
+        type: string
+      path:
+        type: string
+      valueFiles:
+        type: array
+        items:
+          type: string
+  repositoryKsonnetAppSpec:
+    type: object
+    title: |-
+      KsonnetAppSpec contains Ksonnet app response
+      This roughly reflects: ksonnet/ksonnet/metadata/app/schema.go
+    properties:
+      environments:
+        type: object
+        additionalProperties:
+          "$ref": "#/definitions/repositoryKsonnetEnvironment"
+      name:
+        type: string
+      path:
+        type: string
+  repositoryKsonnetEnvironment:
+    type: object
+    properties:
+      destination:
+        "$ref": "#/definitions/repositoryKsonnetEnvironmentDestination"
+      k8sVersion:
+        description: KubernetesVersion is the kubernetes version the targetted cluster
+          is running on.
+        type: string
+      name:
+        type: string
+        title: Name is the user defined name of an environment
+      path:
+        description: Path is the relative project path containing metadata for this
+          environment.
+        type: string
+  repositoryKsonnetEnvironmentDestination:
+    type: object
+    properties:
+      namespace:
+        type: string
+        title: Namespace is the namespace of the Kubernetes server that targets should
+          be deployed to
+      server:
+        description: Server is the Kubernetes server that the cluster is running on.
+        type: string
+  repositoryKustomizeAppSpec:
+    type: object
+    title: KustomizeAppSpec contains kustomize app name and path in source repo
+    properties:
+      path:
+        type: string
+  repositoryManifestResponse:
+    type: object
+    properties:
+      manifests:
+        type: array
+        items:
+          type: string
+      namespace:
+        type: string
+      params:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ComponentParameter"
+      revision:
+        type: string
+      server:
+        type: string
+  repositoryRepoAppDetailsResponse:
+    type: object
+    title: RepoAppDetailsResponse application details
+    properties:
+      helm:
+        "$ref": "#/definitions/repositoryHelmAppSpec"
+      ksonnet:
+        "$ref": "#/definitions/repositoryKsonnetAppSpec"
+      kustomize:
+        "$ref": "#/definitions/repositoryKustomizeAppSpec"
+      type:
+        type: string
+  repositoryRepoAppsResponse:
+    type: object
+    title: RepoAppsResponse contains applications of specified repository
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/repositoryAppInfo"
+  repositoryRepoResponse:
+    type: object
+  servicesManagedResourcesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ResourceDiff"
+  servicesResourceTreeResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ResourceNode"
+  sessionSessionCreateRequest:
+    description: SessionCreateRequest is for logging in.
+    type: object
+    properties:
+      password:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+  sessionSessionResponse:
+    description: SessionResponse wraps the created token or returns an empty string
+      if deleted.
+    type: object
+    properties:
+      token:
+        type: string
+  v1Event:
+    description: Event is a report of an event somewhere in the cluster.
+    type: object
+    properties:
+      action:
+        type: string
+        title: |-
+          What action was taken/failed regarding to the Regarding object.
+          +optional
+      count:
+        type: integer
+        format: int32
+        title: |-
+          The number of times this event has occurred.
+          +optional
+      eventTime:
+        "$ref": "#/definitions/v1MicroTime"
+      firstTimestamp:
+        "$ref": "#/definitions/v1Time"
+      involvedObject:
+        "$ref": "#/definitions/v1ObjectReference"
+      lastTimestamp:
+        "$ref": "#/definitions/v1Time"
+      message:
+        type: string
+        title: |-
+          A human-readable description of the status of this operation.
+          TODO: decide on maximum length.
+          +optional
+      metadata:
+        "$ref": "#/definitions/v1ObjectMeta"
+      reason:
+        type: string
+        title: |-
+          This should be a short, machine understandable string that gives the reason
+          for the transition into the object's current status.
+          TODO: provide exact specification for format.
+          +optional
+      related:
+        "$ref": "#/definitions/v1ObjectReference"
+      reportingComponent:
+        type: string
+        title: |-
+          Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
+          +optional
+      reportingInstance:
+        type: string
+        title: |-
+          ID of the controller instance, e.g. `kubelet-xyzf`.
+          +optional
+      series:
+        "$ref": "#/definitions/v1EventSeries"
+      source:
+        "$ref": "#/definitions/v1EventSource"
+      type:
+        type: string
+        title: |-
+          Type of this event (Normal, Warning), new types could be added in the future
+          +optional
+  v1EventList:
+    description: EventList is a list of events.
+    type: object
+    properties:
+      items:
+        type: array
+        title: List of events
+        items:
+          "$ref": "#/definitions/v1Event"
+      metadata:
+        "$ref": "#/definitions/v1ListMeta"
+  v1EventSeries:
+    description: |-
+      EventSeries contain information on series of events, i.e. thing that was/is happening
+      continuously for some time.
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int32
+        title: Number of occurrences in this series up to the last heartbeat time
+      lastObservedTime:
+        "$ref": "#/definitions/v1MicroTime"
+      state:
+        type: string
+        title: 'State of this Series: Ongoing or Finished'
+  v1EventSource:
+    description: EventSource contains information for an event.
+    type: object
+    properties:
+      component:
+        type: string
+        title: |-
+          Component from which the event is generated.
+          +optional
+      host:
+        type: string
+        title: |-
+          Node name on which the event is generated.
+          +optional
+  v1GroupKind:
+    description: "+protobuf.options.(gogoproto.goproto_stringer)=false"
+    type: object
+    title: |-
+      GroupKind specifies a Group and a Kind, but does not force a version.  This is useful for identifying
+      concepts during lookup stages without having partially valid types
+    properties:
+      group:
+        type: string
+      kind:
+        type: string
+  v1Initializer:
+    description: Initializer is information about an initializer that has not yet
+      completed.
+    type: object
+    properties:
+      name:
+        description: name of the process that is responsible for initializing this
+          object.
+        type: string
+  v1Initializers:
+    description: Initializers tracks the progress of initialization.
+    type: object
+    properties:
+      pending:
+        type: array
+        title: |-
+          Pending is a list of initializers that must execute in order before this object is visible.
+          When the last pending initializer is removed, and no failing result is set, the initializers
+          struct will be set to nil and the object is considered as initialized and visible to all
+          clients.
+          +patchMergeKey=name
+          +patchStrategy=merge
+        items:
+          "$ref": "#/definitions/v1Initializer"
+      result:
+        "$ref": "#/definitions/v1Status"
+  v1ListMeta:
+    description: |-
+      ListMeta describes metadata that synthetic resources must have, including lists and
+      various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
+    type: object
+    properties:
+      continue:
+        description: |-
+          continue may be set if the user set a limit on the number of items returned, and indicates that
+          the server has more data available. The value is opaque and may be used to issue another request
+          to the endpoint that served this list to retrieve the next set of available objects. Continuing a
+          consistent list may not be possible if the server configuration has changed or more than a few
+          minutes have passed. The resourceVersion field returned when using this continue value will be
+          identical to the value in the first response, unless you have received this token from an error
+          message.
+        type: string
+      resourceVersion:
+        type: string
+        title: |-
+          String that identifies the server's internal version of this object that
+          can be used by clients to determine when objects have changed.
+          Value must be treated as opaque by clients and passed unmodified back to the server.
+          Populated by the system.
+          Read-only.
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
+          +optional
+      selfLink:
+        type: string
+        title: |-
+          selfLink is a URL representing this object.
+          Populated by the system.
+          Read-only.
+          +optional
+  v1MicroTime:
+    description: |-
+      MicroTime is version of Time with microsecond level precision.
+
+      +protobuf.options.marshal=false
+      +protobuf.as=Timestamp
+      +protobuf.options.(gogoproto.goproto_stringer)=false
+    type: object
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive. This field may be limited in precision depending on context.
+        type: integer
+        format: int32
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        type: string
+        format: int64
+  v1ObjectMeta:
+    description: |-
+      ObjectMeta is metadata that all persisted resources must have, which includes all objects
+      users must create.
+    type: object
+    properties:
+      annotations:
+        type: object
+        title: |-
+          Annotations is an unstructured key value map stored with a resource that may be
+          set by external tools to store and retrieve arbitrary metadata. They are not
+          queryable and should be preserved when modifying objects.
+          More info: http://kubernetes.io/docs/user-guide/annotations
+          +optional
+        additionalProperties:
+          type: string
+      clusterName:
+        type: string
+        title: |-
+          The name of the cluster which the object belongs to.
+          This is used to distinguish resources with same name and namespace in different clusters.
+          This field is not set anywhere right now and apiserver is going to ignore it if set in create or update request.
+          +optional
+      creationTimestamp:
+        "$ref": "#/definitions/v1Time"
+      deletionGracePeriodSeconds:
+        type: string
+        format: int64
+        title: |-
+          Number of seconds allowed for this object to gracefully terminate before
+          it will be removed from the system. Only set when deletionTimestamp is also set.
+          May only be shortened.
+          Read-only.
+          +optional
+      deletionTimestamp:
+        "$ref": "#/definitions/v1Time"
+      finalizers:
+        type: array
+        title: |-
+          Must be empty before the object is deleted from the registry. Each entry
+          is an identifier for the responsible component that will remove the entry
+          from the list. If the deletionTimestamp of the object is non-nil, entries
+          in this list can only be removed.
+          +optional
+          +patchStrategy=merge
+        items:
+          type: string
+      generateName:
+        description: |-
+          GenerateName is an optional prefix, used by the server, to generate a unique
+          name ONLY IF the Name field has not been provided.
+          If this field is used, the name returned to the client will be different
+          than the name passed. This value will also be combined with a unique suffix.
+          The provided value has the same validation rules as the Name field,
+          and may be truncated by the length of the suffix required to make the value
+          unique on the server.
+
+          If this field is specified and the generated name exists, the server will
+          NOT return a 409 - instead, it will either return 201 Created or 500 with Reason
+          ServerTimeout indicating a unique name could not be found in the time allotted, and the client
+          should retry (optionally after the time indicated in the Retry-After header).
+
+          Applied only if Name is not specified.
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#idempotency
+          +optional
+        type: string
+      generation:
+        type: string
+        format: int64
+        title: |-
+          A sequence number representing a specific generation of the desired state.
+          Populated by the system. Read-only.
+          +optional
+      initializers:
+        "$ref": "#/definitions/v1Initializers"
+      labels:
+        type: object
+        title: |-
+          Map of string keys and values that can be used to organize and categorize
+          (scope and select) objects. May match selectors of replication controllers
+          and services.
+          More info: http://kubernetes.io/docs/user-guide/labels
+          +optional
+        additionalProperties:
+          type: string
+      name:
+        type: string
+        title: |-
+          Name must be unique within a namespace. Is required when creating resources, although
+          some resources may allow a client to request the generation of an appropriate name
+          automatically. Name is primarily intended for creation idempotence and configuration
+          definition.
+          Cannot be updated.
+          More info: http://kubernetes.io/docs/user-guide/identifiers#names
+          +optional
+      namespace:
+        description: |-
+          Namespace defines the space within each name must be unique. An empty namespace is
+          equivalent to the "default" namespace, but "default" is the canonical representation.
+          Not all objects are required to be scoped to a namespace - the value of this field for
+          those objects will be empty.
+
+          Must be a DNS_LABEL.
+          Cannot be updated.
+          More info: http://kubernetes.io/docs/user-guide/namespaces
+          +optional
+        type: string
+      ownerReferences:
+        type: array
+        title: |-
+          List of objects depended by this object. If ALL objects in the list have
+          been deleted, this object will be garbage collected. If this object is managed by a controller,
+          then an entry in this list will point to this controller, with the controller field set to true.
+          There cannot be more than one managing controller.
+          +optional
+          +patchMergeKey=uid
+          +patchStrategy=merge
+        items:
+          "$ref": "#/definitions/v1OwnerReference"
+      resourceVersion:
+        description: |-
+          An opaque value that represents the internal version of this object that can
+          be used by clients to determine when objects have changed. May be used for optimistic
+          concurrency, change detection, and the watch operation on a resource or set of resources.
+          Clients must treat these values as opaque and passed unmodified back to the server.
+          They may only be valid for a particular resource or set of resources.
+
+          Populated by the system.
+          Read-only.
+          Value must be treated as opaque by clients and .
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
+          +optional
+        type: string
+      selfLink:
+        type: string
+        title: |-
+          SelfLink is a URL representing this object.
+          Populated by the system.
+          Read-only.
+          +optional
+      uid:
+        description: |-
+          UID is the unique in time and space value for this object. It is typically generated by
+          the server on successful creation of a resource and is not allowed to change on PUT
+          operations.
+
+          Populated by the system.
+          Read-only.
+          More info: http://kubernetes.io/docs/user-guide/identifiers#uids
+          +optional
+        type: string
+  v1ObjectReference:
+    type: object
+    title: |-
+      ObjectReference contains enough information to let you inspect or modify the referred object.
+      +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+    properties:
+      apiVersion:
+        type: string
+        title: |-
+          API version of the referent.
+          +optional
+      fieldPath:
+        type: string
+        title: |-
+          If referring to a piece of an object instead of an entire object, this string
+          should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+          For example, if the object reference is to a container within a pod, this would take on a value like:
+          "spec.containers{name}" (where "name" refers to the name of the container that triggered
+          the event) or if no container name is specified "spec.containers[2]" (container with
+          index 2 in this pod). This syntax is chosen only to have some well-defined way of
+          referencing a part of an object.
+          TODO: this design is not final and this field is subject to change in the future.
+          +optional
+      kind:
+        type: string
+        title: |-
+          Kind of the referent.
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+          +optional
+      name:
+        type: string
+        title: |-
+          Name of the referent.
+          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+          +optional
+      namespace:
+        type: string
+        title: |-
+          Namespace of the referent.
+          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+          +optional
+      resourceVersion:
+        type: string
+        title: |-
+          Specific resourceVersion to which this reference is made, if any.
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#concurrency-control-and-consistency
+          +optional
+      uid:
+        type: string
+        title: |-
+          UID of the referent.
+          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+          +optional
+  v1OwnerReference:
+    description: |-
+      OwnerReference contains enough information to let you identify an owning
+      object. Currently, an owning object must be in the same namespace, so there
+      is no namespace field.
+    type: object
+    properties:
+      apiVersion:
+        description: API version of the referent.
+        type: string
+      blockOwnerDeletion:
+        type: boolean
+        format: boolean
+        title: |-
+          If true, AND if the owner has the "foregroundDeletion" finalizer, then
+          the owner cannot be deleted from the key-value store until this
+          reference is removed.
+          Defaults to false.
+          To set this field, a user needs "delete" permission of the owner,
+          otherwise 422 (Unprocessable Entity) will be returned.
+          +optional
+      controller:
+        type: boolean
+        format: boolean
+        title: |-
+          If true, this reference points to the managing controller.
+          +optional
+      kind:
+        type: string
+        title: |-
+          Kind of the referent.
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+      name:
+        type: string
+        title: |-
+          Name of the referent.
+          More info: http://kubernetes.io/docs/user-guide/identifiers#names
+      uid:
+        type: string
+        title: |-
+          UID of the referent.
+          More info: http://kubernetes.io/docs/user-guide/identifiers#uids
+  v1Status:
+    description: Status is a return value for calls that don't return other objects.
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+        title: |-
+          Suggested HTTP return code for this status, 0 if not set.
+          +optional
+      details:
+        "$ref": "#/definitions/v1StatusDetails"
+      message:
+        type: string
+        title: |-
+          A human-readable description of the status of this operation.
+          +optional
+      metadata:
+        "$ref": "#/definitions/v1ListMeta"
+      reason:
+        type: string
+        title: |-
+          A machine-readable description of why this operation is in the
+          "Failure" status. If this value is empty there
+          is no information available. A Reason clarifies an HTTP status
+          code but does not override it.
+          +optional
+      status:
+        type: string
+        title: |-
+          Status of the operation.
+          One of: "Success" or "Failure".
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status
+          +optional
+  v1StatusCause:
+    description: |-
+      StatusCause provides more information about an api.Status failure, including
+      cases when multiple errors are encountered.
+    type: object
+    properties:
+      field:
+        description: |-
+          The field of the resource that has caused this error, as named by its JSON
+          serialization. May include dot and postfix notation for nested attributes.
+          Arrays are zero-indexed.  Fields may appear more than once in an array of
+          causes due to fields having multiple errors.
+          Optional.
+
+          Examples:
+            "name" - the field "name" on the current resource
+            "items[0].name" - the field "name" on the first array entry in "items"
+          +optional
+        type: string
+      message:
+        type: string
+        title: |-
+          A human-readable description of the cause of the error.  This field may be
+          presented as-is to a reader.
+          +optional
+      reason:
+        type: string
+        title: |-
+          A machine-readable description of the cause of the error. If this value is
+          empty there is no information available.
+          +optional
+  v1StatusDetails:
+    description: |-
+      StatusDetails is a set of additional properties that MAY be set by the
+      server to provide additional information about a response. The Reason
+      field of a Status object defines what attributes will be set. Clients
+      must ignore fields that do not match the defined type of each attribute,
+      and should assume that any attribute may be empty, invalid, or under
+      defined.
+    type: object
+    properties:
+      causes:
+        type: array
+        title: |-
+          The Causes array includes more details associated with the StatusReason
+          failure. Not all StatusReasons may provide detailed causes.
+          +optional
+        items:
+          "$ref": "#/definitions/v1StatusCause"
+      group:
+        type: string
+        title: |-
+          The group attribute of the resource associated with the status StatusReason.
+          +optional
+      kind:
+        type: string
+        title: |-
+          The kind attribute of the resource associated with the status StatusReason.
+          On some operations may differ from the requested resource Kind.
+          More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds
+          +optional
+      name:
+        type: string
+        title: |-
+          The name attribute of the resource associated with the status StatusReason
+          (when there is a single name which can be described).
+          +optional
+      retryAfterSeconds:
+        type: integer
+        format: int32
+        title: |-
+          If specified, the time in seconds before the operation should be retried. Some errors may indicate
+          the client must take an alternate action - for those errors this field may indicate how long to wait
+          before taking the alternate action.
+          +optional
+      uid:
+        type: string
+        title: |-
+          UID of the resource.
+          (when there is a single resource which can be described).
+          More info: http://kubernetes.io/docs/user-guide/identifiers#uids
+          +optional
+  v1Time:
+    description: |-
+      Time is a wrapper around time.Time which supports correct
+      marshaling to YAML and JSON.  Wrappers are provided for many
+      of the factory methods that the time package offers.
+
+      +protobuf.options.marshal=false
+      +protobuf.as=Timestamp
+      +protobuf.options.(gogoproto.goproto_stringer)=false
+    type: object
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive. This field may be limited in precision depending on context.
+        type: integer
+        format: int32
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        type: string
+        format: int64
+  v1alpha1AWSAuthConfig:
+    type: object
+    title: AWSAuthConfig is an AWS IAM authentication configuration
+    properties:
+      clusterName:
+        type: string
+        title: ClusterName contains AWS cluster name
+      roleARN:
+        description: RoleARN contains optional role ARN. If set then AWS IAM Authenticator
+          assume a role to perform cluster operations instead of the default AWS credential
+          provider chain.
+        type: string
+  v1alpha1AppProject:
+    type: object
+    title: |-
+      AppProject provides a logical grouping of applications, providing controls for:
+      * where the apps may deploy to (cluster whitelist)
+      * what may be deployed (repository whitelist, resource whitelist/blacklist)
+      * who can access these applications (roles, OIDC group claims bindings)
+      * and what they can do (RBAC policies)
+      * automation access to these roles (JWT tokens)
+      +genclient
+      +genclient:noStatus
+      +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+    properties:
+      metadata:
+        "$ref": "#/definitions/v1ObjectMeta"
+      spec:
+        "$ref": "#/definitions/v1alpha1AppProjectSpec"
+  v1alpha1AppProjectList:
+    type: object
+    title: |-
+      AppProjectList is list of AppProject resources
+      +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1AppProject"
+      metadata:
+        "$ref": "#/definitions/v1ListMeta"
+  v1alpha1AppProjectSpec:
+    type: object
+    title: AppProjectSpec is the specification of an AppProject
+    properties:
+      clusterResourceWhitelist:
+        type: array
+        title: ClusterResourceWhitelist contains list of whitelisted cluster level
+          resources
+        items:
+          "$ref": "#/definitions/v1GroupKind"
+      description:
+        type: string
+        title: Description contains optional project description
+      destinations:
+        type: array
+        title: Destinations contains list of destinations available for deployment
+        items:
+          "$ref": "#/definitions/v1alpha1ApplicationDestination"
+      namespaceResourceBlacklist:
+        type: array
+        title: NamespaceResourceBlacklist contains list of blacklisted namespace level
+          resources
+        items:
+          "$ref": "#/definitions/v1GroupKind"
+      roles:
+        type: array
+        title: Roles are user defined RBAC roles associated with this project
+        items:
+          "$ref": "#/definitions/v1alpha1ProjectRole"
+      sourceRepos:
+        type: array
+        title: SourceRepos contains list of git repository URLs which can be used
+          for deployment
+        items:
+          type: string
+  v1alpha1Application:
+    type: object
+    title: |-
+      Application is a definition of Application resource.
+      +genclient
+      +genclient:noStatus
+      +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+    properties:
+      metadata:
+        "$ref": "#/definitions/v1ObjectMeta"
+      operation:
+        "$ref": "#/definitions/v1alpha1Operation"
+      spec:
+        "$ref": "#/definitions/v1alpha1ApplicationSpec"
+      status:
+        "$ref": "#/definitions/v1alpha1ApplicationStatus"
+  v1alpha1ApplicationCondition:
+    type: object
+    title: ApplicationCondition contains details about current application condition
+    properties:
+      message:
+        type: string
+        title: Message contains human-readable message indicating details about condition
+      type:
+        type: string
+        title: Type is an application condition type
+  v1alpha1ApplicationDestination:
+    type: object
+    title: ApplicationDestination contains deployment destination information
+    properties:
+      namespace:
+        type: string
+        title: Namespace overrides the environment namespace value in the ksonnet
+          app.yaml
+      server:
+        type: string
+        title: Server overrides the environment server value in the ksonnet app.yaml
+  v1alpha1ApplicationList:
+    type: object
+    title: |-
+      ApplicationList is list of Application resources
+      +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1Application"
+      metadata:
+        "$ref": "#/definitions/v1ListMeta"
+  v1alpha1ApplicationSource:
+    description: ApplicationSource contains information about github repository, path
+      within repository and target application environment.
+    type: object
+    properties:
+      componentParameterOverrides:
+        type: array
+        title: ComponentParameterOverrides are a list of parameter override values
+        items:
+          "$ref": "#/definitions/v1alpha1ComponentParameter"
+      environment:
+        type: string
+        title: |-
+          Environment is a ksonnet application environment name
+          DEPRECATED: specify environment in spec.source.ksonnet.environment instead
+      helm:
+        "$ref": "#/definitions/v1alpha1ApplicationSourceHelm"
+      ksonnet:
+        "$ref": "#/definitions/v1alpha1ApplicationSourceKsonnet"
+      kustomize:
+        "$ref": "#/definitions/v1alpha1ApplicationSourceKustomize"
+      path:
+        type: string
+        title: Path is a directory path within the repository containing a
+      repoURL:
+        type: string
+        title: RepoURL is the git repository URL of the application manifests
+      targetRevision:
+        type: string
+        title: |-
+          TargetRevision defines the commit, tag, or branch in which to sync the application to.
+          If omitted, will sync to HEAD
+      valuesFiles:
+        type: array
+        title: |-
+          ValuesFiles is a list of Helm values files to use when generating a template
+          DEPRECATED: specify values in spec.source.helm.valueFiles instead
+        items:
+          type: string
+  v1alpha1ApplicationSourceHelm:
+    type: object
+    title: ApplicationSourceHelm holds helm specific options
+    properties:
+      valueFiles:
+        type: array
+        title: ValuesFiles is a list of Helm value files to use when generating a
+          template
+        items:
+          type: string
+  v1alpha1ApplicationSourceKsonnet:
+    type: object
+    title: ApplicationSourceKsonnet holds ksonnet specific options
+    properties:
+      environment:
+        type: string
+        title: Environment is a ksonnet application environment name
+  v1alpha1ApplicationSourceKustomize:
+    type: object
+    title: ApplicationSourceKustomize holds kustomize specific options
+    properties:
+      namePrefix:
+        type: string
+        title: NamePrefix is a prefix appended to resources for kustomize apps
+  v1alpha1ApplicationSpec:
+    description: ApplicationSpec represents desired application state. Contains link
+      to repository with application definition and additional parameters link definition
+      revision.
+    type: object
+    properties:
+      destination:
+        "$ref": "#/definitions/v1alpha1ApplicationDestination"
+      project:
+        description: Project is a application project name. Empty name means that
+          application belongs to 'default' project.
+        type: string
+      source:
+        "$ref": "#/definitions/v1alpha1ApplicationSource"
+      syncPolicy:
+        "$ref": "#/definitions/v1alpha1SyncPolicy"
+  v1alpha1ApplicationStatus:
+    type: object
+    title: ApplicationStatus contains information about application sync, health status
+    properties:
+      conditions:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ApplicationCondition"
+      health:
+        "$ref": "#/definitions/v1alpha1HealthStatus"
+      history:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1RevisionHistory"
+      observedAt:
+        "$ref": "#/definitions/v1Time"
+      operationState:
+        "$ref": "#/definitions/v1alpha1OperationState"
+      resources:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ResourceStatus"
+      sync:
+        "$ref": "#/definitions/v1alpha1SyncStatus"
+  v1alpha1ApplicationWatchEvent:
+    description: ApplicationWatchEvent contains information about application change.
+    type: object
+    properties:
+      application:
+        "$ref": "#/definitions/v1alpha1Application"
+      type:
+        type: string
+  v1alpha1Cluster:
+    type: object
+    title: Cluster is the definition of a cluster resource
+    properties:
+      config:
+        "$ref": "#/definitions/v1alpha1ClusterConfig"
+      connectionState:
+        "$ref": "#/definitions/v1alpha1ConnectionState"
+      name:
+        type: string
+        title: Name of the cluster. If omitted, will use the server address
+      server:
+        type: string
+        title: Server is the API server URL of the Kubernetes cluster
+  v1alpha1ClusterConfig:
+    description: |-
+      ClusterConfig is the configuration attributes. This structure is subset of the go-client
+      rest.Config with annotations added for marshalling.
+    type: object
+    properties:
+      awsAuthConfig:
+        "$ref": "#/definitions/v1alpha1AWSAuthConfig"
+      bearerToken:
+        description: |-
+          Server requires Bearer authentication. This client will not attempt to use
+          refresh tokens for an OAuth2 flow.
+          TODO: demonstrate an OAuth2 compatible client.
+        type: string
+      password:
+        type: string
+      tlsClientConfig:
+        "$ref": "#/definitions/v1alpha1TLSClientConfig"
+      username:
+        type: string
+        title: Server requires Basic authentication
+  v1alpha1ClusterList:
+    description: ClusterList is a collection of Clusters.
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1Cluster"
+      metadata:
+        "$ref": "#/definitions/v1ListMeta"
+  v1alpha1ComparedTo:
+    type: object
+    title: ComparedTo contains application source and target which was used for resources
+      comparison
+    properties:
+      destination:
+        "$ref": "#/definitions/v1alpha1ApplicationDestination"
+      source:
+        "$ref": "#/definitions/v1alpha1ApplicationSource"
+  v1alpha1ComponentParameter:
+    type: object
+    title: ComponentParameter contains information about component parameter value
+    properties:
+      component:
+        type: string
+      name:
+        type: string
+      value:
+        type: string
+  v1alpha1ConnectionState:
+    type: object
+    title: ConnectionState contains information about remote resource connection state
+    properties:
+      attemptedAt:
+        "$ref": "#/definitions/v1Time"
+      message:
+        type: string
+      status:
+        type: string
+  v1alpha1HealthStatus:
+    type: object
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+  v1alpha1InfoItem:
+    type: object
+    title: InfoItem contains human readable information about object
+    properties:
+      name:
+        description: Name is a human readable title for this piece of information.
+        type: string
+      value:
+        description: Value is human readable content.
+        type: string
+  v1alpha1JWTToken:
+    type: object
+    title: JWTToken holds the issuedAt and expiresAt values of a token
+    properties:
+      exp:
+        type: string
+        format: int64
+      iat:
+        type: string
+        format: int64
+  v1alpha1Operation:
+    description: Operation contains requested operation parameters.
+    type: object
+    properties:
+      sync:
+        "$ref": "#/definitions/v1alpha1SyncOperation"
+  v1alpha1OperationState:
+    description: OperationState contains information about state of currently performing
+      operation on application.
+    type: object
+    properties:
+      finishedAt:
+        "$ref": "#/definitions/v1Time"
+      message:
+        description: Message hold any pertinent messages when attempting to perform
+          operation (typically errors).
+        type: string
+      operation:
+        "$ref": "#/definitions/v1alpha1Operation"
+      phase:
+        type: string
+        title: Phase is the current phase of the operation
+      startedAt:
+        "$ref": "#/definitions/v1Time"
+      syncResult:
+        "$ref": "#/definitions/v1alpha1SyncOperationResult"
+  v1alpha1ProjectRole:
+    type: object
+    title: ProjectRole represents a role that has access to a project
+    properties:
+      description:
+        type: string
+        title: Description is a description of the role
+      groups:
+        type: array
+        title: Groups are a list of OIDC group claims bound to this role
+        items:
+          type: string
+      jwtTokens:
+        type: array
+        title: JWTTokens are a list of generated JWT tokens bound to this role
+        items:
+          "$ref": "#/definitions/v1alpha1JWTToken"
+      name:
+        type: string
+        title: Name is a name for this role
+      policies:
+        type: array
+        title: Policies Stores a list of casbin formated strings that define access
+          policies for the role in the project
+        items:
+          type: string
+  v1alpha1Repository:
+    type: object
+    title: Repository is a Git repository holding application configurations
+    properties:
+      connectionState:
+        "$ref": "#/definitions/v1alpha1ConnectionState"
+      password:
+        type: string
+      repo:
+        type: string
+      sshPrivateKey:
+        type: string
+      username:
+        type: string
+  v1alpha1RepositoryList:
+    description: RepositoryList is a collection of Repositories.
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1Repository"
+      metadata:
+        "$ref": "#/definitions/v1ListMeta"
+  v1alpha1ResourceDiff:
+    type: object
+    title: ResourceDiff holds the diff of a live and target resource object
+    properties:
+      diff:
+        type: string
+      group:
+        type: string
+      kind:
+        type: string
+      liveState:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      targetState:
+        type: string
+  v1alpha1ResourceNode:
+    type: object
+    title: ResourceNode contains information about live resource and its children
+    properties:
+      children:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ResourceNode"
+      group:
+        type: string
+      info:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1InfoItem"
+      kind:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      resourceVersion:
+        type: string
+      version:
+        type: string
+  v1alpha1ResourceResult:
+    type: object
+    title: ResourceResult holds the operation result details of a specific resource
+    properties:
+      group:
+        type: string
+      hookPhase:
+        type: string
+      hookType:
+        type: string
+      kind:
+        type: string
+      message:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      status:
+        type: string
+      version:
+        type: string
+  v1alpha1ResourceStatus:
+    type: object
+    title: ResourceStatus holds the current sync and health status of a resource
+    properties:
+      group:
+        type: string
+      health:
+        "$ref": "#/definitions/v1alpha1HealthStatus"
+      hook:
+        type: boolean
+        format: boolean
+      kind:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      status:
+        type: string
+      version:
+        type: string
+  v1alpha1RevisionHistory:
+    type: object
+    title: RevisionHistory contains information relevant to an application deployment
+    properties:
+      componentParameterOverrides:
+        type: array
+        items:
+          "$ref": "#/definitions/v1alpha1ComponentParameter"
+      deployedAt:
+        "$ref": "#/definitions/v1Time"
+      id:
+        type: string
+        format: int64
+      revision:
+        type: string
+  v1alpha1SyncOperation:
+    description: SyncOperation contains sync operation details.
+    type: object
+    properties:
+      dryRun:
+        type: boolean
+        format: boolean
+        title: DryRun will perform a `kubectl apply --dry-run` without actually performing
+          the sync
+      parameterOverrides:
+        "$ref": "#/definitions/applicationv1alpha1ParameterOverrides"
+      prune:
+        type: boolean
+        format: boolean
+        title: Prune deletes resources that are no longer tracked in git
+      resources:
+        type: array
+        title: Resources describes which resources to sync
+        items:
+          "$ref": "#/definitions/v1alpha1SyncOperationResource"
+      revision:
+        description: |-
+          Revision is the git revision in which to sync the application to.
+          If omitted, will use the revision specified in app spec.
+        type: string
+      syncStrategy:
+        "$ref": "#/definitions/v1alpha1SyncStrategy"
+  v1alpha1SyncOperationResource:
+    description: SyncOperationResource contains resources to sync.
+    type: object
+    properties:
+      group:
+        type: string
+      kind:
+        type: string
+      name:
+        type: string
+  v1alpha1SyncOperationResult:
+    type: object
+    title: SyncOperationResult represent result of sync operation
+    properties:
+      resources:
+        type: array
+        title: Resources holds the sync result of each individual resource
+        items:
+          "$ref": "#/definitions/v1alpha1ResourceResult"
+      revision:
+        type: string
+        title: Revision holds the git commit SHA of the sync
+  v1alpha1SyncPolicy:
+    type: object
+    title: SyncPolicy controls when a sync will be performed in response to updates
+      in git
+    properties:
+      automated:
+        "$ref": "#/definitions/v1alpha1SyncPolicyAutomated"
+  v1alpha1SyncPolicyAutomated:
+    type: object
+    title: SyncPolicyAutomated controls the behavior of an automated sync
+    properties:
+      prune:
+        type: boolean
+        format: boolean
+        title: 'Prune will prune resources automatically as part of automated sync
+          (default: false)'
+  v1alpha1SyncStatus:
+    description: SyncStatus is a comparison result of application spec and deployed
+      application.
+    type: object
+    properties:
+      comparedTo:
+        "$ref": "#/definitions/v1alpha1ComparedTo"
+      revision:
+        type: string
+      status:
+        type: string
+  v1alpha1SyncStrategy:
+    type: object
+    title: SyncStrategy controls the manner in which a sync is performed
+    properties:
+      apply:
+        "$ref": "#/definitions/v1alpha1SyncStrategyApply"
+      hook:
+        "$ref": "#/definitions/v1alpha1SyncStrategyHook"
+  v1alpha1SyncStrategyApply:
+    type: object
+    title: SyncStrategyApply uses `kubectl apply` to perform the apply
+    properties:
+      force:
+        description: |-
+          Force indicates whether or not to supply the --force flag to `kubectl apply`.
+          The --force flag deletes and re-create the resource, when PATCH encounters conflict and has
+          retried for 5 times.
+        type: boolean
+        format: boolean
+  v1alpha1SyncStrategyHook:
+    description: |-
+      SyncStrategyHook will perform a sync using hooks annotations.
+      If no hook annotation is specified falls back to `kubectl apply`.
+    type: object
+    properties:
+      syncStrategyApply:
+        "$ref": "#/definitions/v1alpha1SyncStrategyApply"
+  v1alpha1TLSClientConfig:
+    type: object
+    title: TLSClientConfig contains settings to enable transport layer security
+    properties:
+      caData:
+        type: string
+        format: byte
+        title: |-
+          CAData holds PEM-encoded bytes (typically read from a root certificates bundle).
+          CAData takes precedence over CAFile
+      certData:
+        type: string
+        format: byte
+        title: |-
+          CertData holds PEM-encoded bytes (typically read from a client certificate file).
+          CertData takes precedence over CertFile
+      insecure:
+        description: Server should be accessed without verifying the TLS certificate.
+          For testing only.
+        type: boolean
+        format: boolean
+      keyData:
+        type: string
+        format: byte
+        title: |-
+          KeyData holds PEM-encoded bytes (typically read from a client certificate key file).
+          KeyData takes precedence over KeyFile
+      serverName:
+        description: |-
+          ServerName is passed to the server for SNI and is used in the client to check server
+          certificates against. If ServerName is empty, the hostname used to contact the
+          server is used.
+        type: string
+  versionVersionMessage:
+    type: object
+    title: VersionMessage represents version of the Argo CD API server
+    properties:
+      BuildDate:
+        type: string
+      Compiler:
+        type: string
+      GitCommit:
+        type: string
+      GitTag:
+        type: string
+      GitTreeState:
+        type: string
+      GoVersion:
+        type: string
+      KsonnetVersion:
+        type: string
+      Platform:
+        type: string
+      Version:
+        type: string
+

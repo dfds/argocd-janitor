@@ -15,7 +15,7 @@
       "launchUrl": "api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "HARALD_KAFKA_BOOTSTRAP_SERVERS": "localhost:9092"
+        "ARGOJANITOR_KAFKA_BOOTSTRAP_SERVERS": "localhost:9092"
       }
     },
     "ArgoJanitor.WebApi": {
@@ -25,10 +25,10 @@
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ARGOJANITOR_DATABASE_CONNECTIONSTRING": "User ID=postgres;Password=p;Host=localhost;Port=5432;Database=argojanitor_db;",
         "ARGOJANITOR_KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
         "ARGOJANITOR_KAFKA_GROUP_ID": "argojanitor-consumer",
-        "ARGOJANITOR_KAFKA_ENABLE_AUTO_COMMIT": "false"
+        "ARGOJANITOR_KAFKA_ENABLE_AUTO_COMMIT": "false",
+        "ARGO_API_BASE_URL": "http://argo:"
       }
     }
   }

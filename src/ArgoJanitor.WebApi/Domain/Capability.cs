@@ -19,7 +19,6 @@ namespace ArgoJanitor.WebApi.Domain
             var capability = new Capability(
                 id: id,
                 name: name
-                // TODO : Add AzureADObjectId
             );
 
             return capability;

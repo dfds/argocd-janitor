@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using ArgoJanitor.WebApi.Domain;
 using ArgoJanitor.WebApi.Domain.Events;
 using ArgoJanitor.WebApi.EventHandlers;
 using ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD;
 using ArgoJanitor.WebApi.Infrastructure.Messaging;
-using ArgoJanitor.WebApi.Infrastructure.Persistence;
 using ArgoJanitor.WebApi.Infrastructure.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -38,16 +34,28 @@ namespace ArgoJanitor.WebApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var connectionString = Configuration["ARGOJANITOR_DATABASE_CONNECTIONSTRING"];
+           // var connectionString = Configuration["ARGOJANITOR_DATABASE_CONNECTIONSTRING"];
 
-            services
-                .AddEntityFrameworkNpgsql()
-                .AddDbContext<ArgoJanitorDbContext>((serviceProvider, options) => { options.UseNpgsql(connectionString); });
-
-            services.AddTransient<ICapabilityRepository, CapabilityRepository>();
             services.AddTransient<IArgoCDFacade, ArgoCDFacade>();
            
             services.AddTransient<JsonSerializer>();
+            
+            services.AddHttpClient<IArgoCDFacade, ArgoCDFacade>(cfg =>
+            {
+                var baseUrl = Configuration["ARGO_API_BASE_URL"];
+                if (baseUrl != null)
+                {
+                    cfg.BaseAddress = new Uri(baseUrl);
+                }
+
+//                var authToken = Configuration["SLACK_API_AUTH_TOKEN"];
+//                if (authToken != null)
+//                {
+//                    cfg.DefaultRequestHeaders
+//                        .Add(HttpRequestHeader.Authorization.ToString(), $"Bearer {authToken}");
+//                }
+            });
+            
 
             ConfigureDomainEvents(services);
 
@@ -55,8 +63,7 @@ namespace ArgoJanitor.WebApi
             services.AddHostedService<ConsumerHostedService>();
 
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddNpgSql(connectionString, tags: new[] { "backing services", "postgres" });
+                .AddCheck("self", () => HealthCheckResult.Healthy());
 
             services.AddSwaggerDocument();
         }

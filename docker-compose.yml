@@ -1,30 +1,10 @@
 version: '3'
-
 services:
-  database:
-    image: postgres:latest
+  fakeargocd:
+    build:
+      context: ./fake_dependencies/argocd
     ports:
-    - 5432:5432
-    environment:
-    - POSTGRES_USER=postgres
-    - POSTGRES_PASSWORD=p
-
-  db-migration:
-    build: ./db
-    depends_on:
-    - database
-    # volumes:
-    # - ${PWD}/db/export:/tmp
-    environment:
-    # - DEBUG=1                     # enable script debugging
-    - LOCAL_DEVELOPMENT=1         # will try to CREATE DATABASE ${PGDATABASE}
-    - PGDATABASE=argojanitor_db        # database name
-    - PGHOST=database             # same as avove - docker-compose service name
-    - PGPORT=5432                 # same as above
-    - PGUSER=postgres             # same as above
-    - PGPASSWORD=p                # same as above
-    - PGSSLMODE=disable           # ignore SSLMODE for local development (overwritten - see ./db/Dockerfile)
-
+      - "50900:3000"
   kafka:
     image: spotify/kafka
     ports:

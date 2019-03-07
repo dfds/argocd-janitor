@@ -11,16 +11,13 @@ namespace ArgoJanitor.WebApi.EventHandlers
     {
         private readonly ILogger<ArgoCDCapabilityCreatedDomainEventHandler> _logger;
         private readonly IArgoCDFacade _argocdFacade;
-        private readonly ICapabilityRepository _capabilityRepository;
 
         public ArgoCDCapabilityCreatedDomainEventHandler(
             ILogger<ArgoCDCapabilityCreatedDomainEventHandler> logger,
-            IArgoCDFacade argoCDFacade,
-            ICapabilityRepository capabilityRepository)
+            IArgoCDFacade argoCDFacade)
         {
             _logger = logger;
             _argocdFacade = argoCDFacade;
-            _capabilityRepository = capabilityRepository;
         }
 
         public async Task HandleAsync(CapabilityCreatedDomainEvent domainEvent)
@@ -30,7 +27,9 @@ namespace ArgoJanitor.WebApi.EventHandlers
             var capability = Capability.Create(
                 id: domainEvent.Data.CapabilityId,
                 name: domainEvent.Data.CapabilityName);
-            await _capabilityRepository.Add(capability);
+            
+            
+            
 
         }
     }

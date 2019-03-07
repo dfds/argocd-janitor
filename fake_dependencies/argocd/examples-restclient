@@ -1,0 +1,7 @@
+POST http://localhost:50900/api/v1/session
+content-type: application/json
+
+{
+    "username": "admin",
+    "password": "blah"
+}
