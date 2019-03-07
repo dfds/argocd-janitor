@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Amazon.SimpleSystemsManagement;
 using ArgoJanitor.WebApi.Domain.Events;
 using ArgoJanitor.WebApi.EventHandlers;
 using ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD;
+using ArgoJanitor.WebApi.Infrastructure.Facades.SSM;
 using ArgoJanitor.WebApi.Infrastructure.Messaging;
 using ArgoJanitor.WebApi.Infrastructure.Serialization;
 using Microsoft.AspNetCore.Builder;
@@ -34,11 +36,18 @@ namespace ArgoJanitor.WebApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            var options = Configuration.GetAWSOptions();
+            
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonSimpleSystemsManagement>();
+            
            // var connectionString = Configuration["ARGOJANITOR_DATABASE_CONNECTIONSTRING"];
 
-            services.AddTransient<IArgoCDFacade, ArgoCDFacade>();
+            services.AddTransient<ISSMFacade, SSMFacade>();
            
             services.AddTransient<JsonSerializer>();
+         
+         
             
             services.AddHttpClient<IArgoCDFacade, ArgoCDFacade>(cfg =>
             {
