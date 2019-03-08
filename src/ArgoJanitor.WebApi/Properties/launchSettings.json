@@ -28,9 +28,9 @@
         "ARGOJANITOR_KAFKA_BOOTSTRAP_SERVERS": "localhost:9092",
         "ARGOJANITOR_KAFKA_GROUP_ID": "argojanitor-consumer",
         "ARGOJANITOR_KAFKA_ENABLE_AUTO_COMMIT": "false",
-        "ARGOJANITOR_API_BASE_URL": "http://localhost:50900",
+        "ARGOJANITOR_API_BASE_URL": "https://argo.lewey.ded.onep.dk",
         "ARGOJANITOR_SSM_ADMIN_KEY": "/eks/lewey/argocd_admin",
-        "ARGOJANITOR_ARGOCD_DEFAULT_USER": "admin",
+        "ARGOJANITOR_ARGOCD_DEFAULT_USER": "admin"
       }
     }
   }

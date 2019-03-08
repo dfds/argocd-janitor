@@ -7,6 +7,7 @@ using ArgoJanitor.WebApi.EventHandlers;
 using ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD;
 using ArgoJanitor.WebApi.Infrastructure.Facades.SSM;
 using ArgoJanitor.WebApi.Infrastructure.Messaging;
+using ArgoJanitor.WebApi.Infrastructure.Middleware;
 using ArgoJanitor.WebApi.Infrastructure.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -41,13 +42,17 @@ namespace ArgoJanitor.WebApi
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSimpleSystemsManagement>();
             
-           // var connectionString = Configuration["ARGOJANITOR_DATABASE_CONNECTIONSTRING"];
-
             services.AddTransient<ISSMFacade, SSMFacade>();
-           
             services.AddTransient<JsonSerializer>();
-         
-         
+
+            services.AddHttpClient<IArgoCDAuthentication, ArgoCdAuthentication>(cfg =>
+            {
+                var baseUrl = Configuration["ARGO_API_BASE_URL"];
+                if (baseUrl != null)
+                {
+                    cfg.BaseAddress = new Uri(baseUrl);
+                }
+            });
             
             services.AddHttpClient<IArgoCDFacade, ArgoCDFacade>(cfg =>
             {
@@ -56,14 +61,8 @@ namespace ArgoJanitor.WebApi
                 {
                     cfg.BaseAddress = new Uri(baseUrl);
                 }
-
-//                var authToken = Configuration["SLACK_API_AUTH_TOKEN"];
-//                if (authToken != null)
-//                {
-//                    cfg.DefaultRequestHeaders
-//                        .Add(HttpRequestHeader.Authorization.ToString(), $"Bearer {authToken}");
-//                }
-            });
+            })
+                .AddHttpMessageHandler<BearerTokenHandler>();
             
 
             ConfigureDomainEvents(services);

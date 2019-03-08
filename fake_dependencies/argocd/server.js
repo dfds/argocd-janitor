@@ -16,8 +16,6 @@ app.post("/api/v1/session", (req, res) => {
     res.status(200).json({token: "token|"+req.body.username+"|"+req.body.password})
 });
 
-
-
 app.post("/api/v1/projects", (req, res) => {
 
 });

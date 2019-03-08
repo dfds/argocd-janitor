@@ -27,9 +27,8 @@ namespace ArgoJanitor.WebApi.EventHandlers
             var capability = Capability.Create(
                 id: domainEvent.Data.CapabilityId,
                 name: domainEvent.Data.CapabilityName);
-            
-            
-            
+
+            await _argocdFacade.CreateProject(capability.Name);
 
         }
     }
