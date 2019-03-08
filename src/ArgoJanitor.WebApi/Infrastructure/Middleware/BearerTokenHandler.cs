@@ -17,15 +17,11 @@ namespace ArgoJanitor.WebApi.Infrastructure.Middleware
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if(request.Headers.Authorization!=null)
-                return await base.SendAsync(request, cancellationToken);
-
             var username = _configuration["ARGOJANITOR_ARGOCD_DEFAULT_USER"];
             var password = await _ssmFacade.GetSecretFromKey(username);
             var sessionToken = await _argoCdAuthentication.GetSessionToken(username, password);
             
-            request.Headers.Add(HttpRequestHeader.Authorization.ToString(), $"Bearer {sessionToken}");
-            
+            request.Headers.Add(HttpRequestHeader.Cookie.ToString(), $"argocd.token={sessionToken.Token}; path=/; domain=.argo.lewey.ded.onep.dk;");
             return await base.SendAsync(request, cancellationToken);
         }
 

@@ -5,19 +5,22 @@ services:
       context: ./fake_dependencies/argocd
     ports:
       - "50900:3000"
-  kafka:
-    image: spotify/kafka
+  # kafka:
+  #   image: spotify/kafka
+  #   ports:
+  #   - "2181:2181"
+  #   - "9092:9092"
+  #   environment:
+  #     - "ADVERTISED_HOST=localhost"
+  #     - "ADVERTISED_PORT=9092"
+  #     - "AUTO_CREATE_TOPICS=true"
+  lenses:
+    image: landoop/kafka-lenses-dev
     ports:
-    - "2181:2181"
+    - "3030:3030"
     - "9092:9092"
+    - "2181:2181"
+    - "8081:8081"
     environment:
-      - "ADVERTISED_HOST=localhost"
-      - "ADVERTISED_PORT=9092"
-      - "AUTO_CREATE_TOPICS=true"
-
-  kafka-manager:
-    image: sheepkiller/kafka-manager
-    ports:
-    - "9090:9000"
-    environment:
-    - "ZK_HOSTS=kafka:2181"
+      - "ADV_HOST=127.0.0.1"
+      - "EULA=https://dl.lenses.stream/d/?id=6c044a65-341e-413f-804d-b6bb2ee74b05"

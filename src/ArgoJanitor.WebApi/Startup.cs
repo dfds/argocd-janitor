@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.SimpleSystemsManagement;
@@ -45,22 +46,24 @@ namespace ArgoJanitor.WebApi
             services.AddTransient<ISSMFacade, SSMFacade>();
             services.AddTransient<JsonSerializer>();
 
+            var baseUrl = Configuration["ARGOJANITOR_API_BASE_URL"]; 
+            var scheme = Configuration["ARGOJANITOR_API_SCHEME"];    
             services.AddHttpClient<IArgoCDAuthentication, ArgoCdAuthentication>(cfg =>
             {
-                var baseUrl = Configuration["ARGO_API_BASE_URL"];
                 if (baseUrl != null)
                 {
-                    cfg.BaseAddress = new Uri(baseUrl);
+                    cfg.BaseAddress = new Uri($"{scheme??"https"}://{baseUrl}");
                 }
             });
-            
+
+            services.AddTransient<BearerTokenHandler>();
             services.AddHttpClient<IArgoCDFacade, ArgoCDFacade>(cfg =>
             {
-                var baseUrl = Configuration["ARGO_API_BASE_URL"];
                 if (baseUrl != null)
                 {
-                    cfg.BaseAddress = new Uri(baseUrl);
+                    cfg.BaseAddress = new Uri($"{scheme??"https"}://{baseUrl}");  
                 }
+             
             })
                 .AddHttpMessageHandler<BearerTokenHandler>();
             
