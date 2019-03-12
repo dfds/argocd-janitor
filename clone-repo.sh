@@ -49,7 +49,8 @@ ls -la
 cd selfservice/overlays/production
 
 $kustomize_command edit set image 579478677147.dkr.ecr.eu-central-1.amazonaws.com/ded/argojanitor:$TAG
-git add . -m "Set image tag to $TAG"
+git add . 
+git commit -m "Set image tag to $TAG"
 
 # Rebase in case we have a race condition
 git pull --rebase 
