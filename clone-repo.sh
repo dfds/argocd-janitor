@@ -26,7 +26,7 @@ elif which ./kustomize >/dev/null ; then
     kustomize_command=./kustomize
 else    
     opsys=linux  # or darwin, or windows
-    curl -s https://github.com/kubernetes-sigs/kustomize/releases/download/v1.0.11/kustomize_1.0.11_linux_amd64 |\ # Lock to ArgoCD 0.11 version
+    curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases/tags/v1.0.11 |\
     grep browser_download |\
     grep $opsys |\
     cut -d '"' -f 4 |\
