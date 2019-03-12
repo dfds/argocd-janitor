@@ -5,21 +5,26 @@ using System.Text;
 using Confluent.Kafka;
 using Confluent.Kafka.Serialization;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ArgoJanitor.WebApi.Infrastructure.Messaging
 {
     public class KafkaConsumerFactory
     {
         private readonly KafkaConfiguration _configuration;
+        private readonly ILogger<KafkaConsumerFactory> _logger;
 
-        public KafkaConsumerFactory(KafkaConfiguration configuration)
+        public KafkaConsumerFactory(KafkaConfiguration configuration, ILogger<KafkaConsumerFactory> logger)
         {
             _configuration = configuration;
+            _logger = logger;
         }
 
         public Consumer<string, string> Create()
         {
+            _logger.LogInformation("Creating KafkaConsumer");
             var config = _configuration.AsEnumerable().ToArray();
+            _logger.LogInformation("Configuration loaded");
             
             return new Consumer<string, string>(
                 config: config,
