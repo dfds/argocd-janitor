@@ -33,9 +33,8 @@ else
     xargs curl -O -L
     mv kustomize_*_${opsys}_amd64 kustomize
     chmod u+x kustomize
-    mv kustomize /usr/local/bin
 
-    kustomize_command=kustomize
+    kustomize_command=$(pwd)/kustomize
 fi
 
 echo "Installed Kustomize $($kustomize_command version)"
