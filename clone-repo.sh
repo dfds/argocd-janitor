@@ -25,10 +25,15 @@ cd gitops
 
 git clone $GITREPO .
 
-cd overlays/production
+ls -la
+
+cd selfservice/overlays/production
 
 kustomize edit set image 579478677147.dkr.ecr.eu-central-1.amazonaws.com/ded/argojanitor:$TAG
 git add . -m "Set image tag to $TAG"
+
+# Rebase in case we have a race condition
+git pull --rebase 
 git push
 
 #kustomize edit ..
