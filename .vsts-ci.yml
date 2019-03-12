@@ -4,11 +4,19 @@ pool:
 trigger:
 - master
 steps:
-
+# Install an SSH key prior to a build or release
+- task: InstallSSHKey@0
+  inputs:
+    hostName: github.com,192.30.253.113 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+    sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeV3GGIKf4hbD26CeBckQraX9pAsPbAQok0ot9cZ2Ytmo5377daHR8jwLnaNp0CE8F5sbIiBdiug+yZ1UY18smOwWqQZQtMTRqSJYv7Nqrs9Nf6AoJwdn1t+TOMk34x5E8/zItMM0wsMuFZURgGyYuq2lQeaECILcXFEIA2kcwNYWsnc0PBnM9CnOULWuISDXtTLzekXuKPKBhk2LP5MloLkEKlWbK5LM4rY32iHGPCftudiyjYzUpdtbL72WZYmlh4n7ZYxsyjK0aEImteMs0DDX1/oEdGpchNX/xSoFikwixljhDg+EubRHPtxV7nS/hclxyQa6vbHW6gx1Zesar azuredevops@dfds.cloud
+    #sshPassphrase: # Optional
+    sshKeySecureFile: azuredevopsagent
 - bash: |
    sudo pip install setuptools
    sudo pip install awscli
    export AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
    chmod +x ./pipeline.sh
    ./pipeline.sh $(Build.BuildId) $(System.DefaultWorkingDirectory)
+   ./install-kustomize.sh
+   ./clone-repo.sh
   displayName: Pipeline Bash Script
