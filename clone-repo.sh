@@ -26,7 +26,7 @@ elif which ./kustomize >/dev/null ; then
     kustomize_command=./kustomize
 else    
     opsys=linux  # or darwin, or windows
-    curl -s https://api.github.com/repos/kubernetes-sigs/kustomize/releases/latest |\
+    curl -s https://github.com/kubernetes-sigs/kustomize/releases/download/v1.0.11/kustomize_1.0.11_linux_amd64 |\ # Lock to ArgoCD 0.11 version
     grep browser_download |\
     grep $opsys |\
     cut -d '"' -f 4 |\
@@ -51,7 +51,8 @@ ls -la
 
 cd selfservice/overlays/production
 
-$kustomize_command edit set image 579478677147.dkr.ecr.eu-central-1.amazonaws.com/ded/argojanitor:$TAG
+#$kustomize_command edit set image 579478677147.dkr.ecr.eu-central-1.amazonaws.com/ded/argojanitor:$TAG
+$kustomize_command edit set imagetag 579478677147.dkr.ecr.eu-central-1.amazonaws.com/ded/argojanitor:$TAG
 git add . 
 git commit -m "Set image tag to $TAG"
 
