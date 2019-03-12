@@ -41,6 +41,9 @@ echo "Installed Kustomize $($kustomize_command version)"
 
 mkdir gitops
 cd gitops
+git config --global user.email "AzureDevOps@dfds.cloud"
+git config --global user.name "Azure DevOps"
+
 
 git clone $GITREPO .
 
