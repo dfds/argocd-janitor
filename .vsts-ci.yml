@@ -18,5 +18,5 @@ steps:
    chmod +x ./pipeline.sh
    ./pipeline.sh $(Build.BuildId) $(System.DefaultWorkingDirectory)
    ./install-kustomize.sh
-   ./clone-repo.sh $(gitops.manifest.repo)
+   ./clone-repo.sh $(gitops.manifest.repo) $(Build.BuildId)
   displayName: Pipeline Bash Script

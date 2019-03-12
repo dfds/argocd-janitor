@@ -14,3 +14,5 @@ else
 
     kustomize_command=./kustomize
 fi
+
+echo "Installed Kustomize version $(kustomize --version)"
