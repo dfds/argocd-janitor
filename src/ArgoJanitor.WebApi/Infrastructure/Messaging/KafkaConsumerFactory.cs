@@ -71,6 +71,7 @@ namespace ArgoJanitor.WebApi.Infrastructure.Messaging
                     "sasl.password",
                     "sasl.mechanisms",
                     "security.protocol",
+                    "auto.offset.reset"
                 };
 
                 var config = configurationKeys

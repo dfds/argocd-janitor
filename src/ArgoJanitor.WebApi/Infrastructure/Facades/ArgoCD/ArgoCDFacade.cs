@@ -20,18 +20,19 @@ namespace ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD
 
         public async Task<CreateProjectResponse> CreateProject(string projectName)
         {
+            var normalizedProjectName = ArgoCDEntityNameNormalizer.Normalize(projectName);
             var projectRequest = new CreateProjectRequest();
-            projectRequest.Project.Metadata.Name = projectName;
+            projectRequest.Project.Metadata.Name = normalizedProjectName;
             var payload = _jsonSerializer.GetPayload(projectRequest);
             
             var response = await _httpClient.PostAsync("/api/v1/projects", payload);
 
             if (response.StatusCode == HttpStatusCode.Conflict)
             {
-                _logger.LogWarning($"{projectName} already exist as a project in Argo.");
+                _logger.LogWarning($"{normalizedProjectName} already exist as a project in Argo.");
                 return new CreateProjectResponse                         
                 {                                                        
-                    Project = (await GetProject(projectName))?.Project   
+                    Project = (await GetProject(normalizedProjectName))?.Project   
                 };                                                       
             }
              
@@ -46,7 +47,8 @@ namespace ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD
 
         public async Task<GetProjectResponse> GetProject(string projectName)
         {
-            var response = await _httpClient.GetAsync("/api/v1/projects/{projectName}");
+            var normalizedProjectName = ArgoCDEntityNameNormalizer.Normalize(projectName);
+            var response = await _httpClient.GetAsync("/api/v1/projects/{normalizedProjectName}");
             
             response.EnsureSuccessStatusCode();
             
