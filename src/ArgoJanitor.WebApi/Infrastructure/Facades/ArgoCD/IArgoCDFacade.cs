@@ -8,7 +8,6 @@ namespace ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD
     {
         Task<CreateProjectResponse> CreateProject(string projectName);
         Task<GetProjectResponse> GetProject(string projectName);
-
     }
 
 
@@ -37,9 +36,15 @@ namespace ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD
     public class AppProjectSpec
     {
         public List<string> SourceRepos { get; set; } = new List<string>();
-        public List<string> Destinations { get; set; } = new List<string>();
+        public List<V1alpha1ApplicationDestination> Destinations { get; set; } = new List<V1alpha1ApplicationDestination>();
         public List<string> Roles { get; set; } = new List<string>();
         public List<string> ClusterResourceWhitelist { get; set; } = new List<string>();
         public List<string> NamespaceResourceBlacklist { get; set; } = new List<string>();
+    }
+    
+    public class V1alpha1ApplicationDestination
+    {
+        public string Server { get; set; }
+        public string Namespace { get; set; }
     }
 }

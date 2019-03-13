@@ -23,6 +23,8 @@ namespace ArgoJanitor.WebApi.Infrastructure.Facades.ArgoCD
             var normalizedProjectName = ArgoCDEntityNameNormalizer.Normalize(projectName);
             var projectRequest = new CreateProjectRequest();
             projectRequest.Project.Metadata.Name = normalizedProjectName;
+            projectRequest.Project.Spec.SourceRepos.Add("*");
+            projectRequest.Project.Spec.Destinations.Add(new V1alpha1ApplicationDestination{Namespace = normalizedProjectName, Server = "*"});
             var payload = _jsonSerializer.GetPayload(projectRequest);
             
             var response = await _httpClient.PostAsync("/api/v1/projects", payload);

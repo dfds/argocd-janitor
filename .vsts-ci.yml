@@ -17,6 +17,5 @@ steps:
    export AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY)
    chmod +x ./pipeline.sh
    ./pipeline.sh $(Build.BuildId) $(System.DefaultWorkingDirectory)
-   #./install-kustomize.sh
    ./clone-repo.sh $(gitops.manifest.repo) $(Build.BuildId)
   displayName: Pipeline Bash Script
